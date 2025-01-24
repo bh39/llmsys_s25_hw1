@@ -100,11 +100,19 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
     Returns:
         Non-constant Variables in topological order starting from the right.
     """
-    # BEGIN ASSIGN1_1
-    # TODO
-    
-    raise NotImplementedError("Task Autodiff Not Implemented Yet")
-    # END ASSIGN1_1
+    from collections import deque
+    visited = set()
+    stack = deque()
+
+    def dfs(var):
+        if var not in visited:
+            visited.add(var)
+            for parent in var.parents:
+                dfs(parent)
+            stack.appendleft(var)
+
+    dfs(variable)
+    return stack
 
 
 def backpropagate(variable: Variable, deriv: Any) -> None:
