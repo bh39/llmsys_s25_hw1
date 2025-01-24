@@ -338,6 +338,8 @@ __global__ void mapKernel(
     out_pos = index_to_position(out_index, out_strides, shape_size);
     int in_pos = index_to_position(in_index, in_strides, shape_size);
     out[out_pos] = fn(fn_id, in_storage[in_pos]);
+    printf("in %d %d, out %d\n",
+           in_pos, in_storage[in_pos], out_pos, out[out_pos]);
   }
 
   /// END ASSIGN1_2
