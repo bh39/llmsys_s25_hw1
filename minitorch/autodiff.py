@@ -101,15 +101,23 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
         Non-constant Variables in topological order starting from the right.
     """
     from collections import deque
-    visited = set()
     stack = deque()
+    visited = set()
 
     def dfs(var):
-        if var not in visited:
-            visited.add(var)
+        if var.unique_id in visited:
+            return 
+        
+        visited.add(var.unique_id)
+
+        if var.is_constant():
+            return
+        
+        if not var.is_leaf():
             for parent in var.parents:
                 dfs(parent)
-            stack.appendleft(var)
+
+        stack.appendleft(var)
 
     dfs(variable)
     return stack
