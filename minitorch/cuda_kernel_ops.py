@@ -46,7 +46,7 @@ fn_map = {
 
 THREADS_PER_BLOCK = 32
 
-class CudaKernelOps(TensorOps):
+class CudaKernelOps(TensorOmps):
     @staticmethod
     def map(fn: Callable[[float], float]) -> MapProto:
         "See `tensor_ops.py`"
@@ -124,6 +124,24 @@ class CudaKernelOps(TensorOps):
             # BEGIN ASSIGN1_2
             # TODO
             # 1. Call the tensorZip function implemented in CUDA
+            lib.tensorZip(
+                out._tensor._storage,
+                out._tensor._shape.astype(np.int32),
+                out._tensor._strides.astype(np.int32),
+                out.size,
+                len(out.shape),  
+                a._tensor._storage,
+                a._tensor._shape.astype(np.int32),
+                a._tensor._strides.astype(np.int32),
+                a.size,
+                len(a.shape),    
+                b._tensor._storage,
+                b._tensor._shape.astype(np.int32),
+                b._tensor._strides.astype(np.int32),
+                b.size,
+                len(b.shape),    
+                fn_id
+            )
 
             # raise NotImplementedError("Zip Function Not Implemented Yet")
             # END ASSIGN1_2
@@ -164,7 +182,20 @@ class CudaKernelOps(TensorOps):
             # BEGIN ASSIGN1_2
             # TODO
             # 1. Call the tensorReduce function implemented in CUDA
-            
+            lib.tensorReduce(
+                out._tensor._storage,
+                out._tensor._shape.astype(np.int32),
+                out._tensor._strides.astype(np.int32),
+                out.size,
+                a._tensor._storage,
+                a._tensor._shape.astype(np.int32),
+                a._tensor._strides.astype(np.int32),
+                dim,               
+                reduce_value,      
+                len(a.shape),      
+                fn_id              
+            )
+
             # raise NotImplementedError("Reduce Function Not Implemented Yet")
             # END ASSIGN1_2
             
@@ -232,6 +263,20 @@ class CudaKernelOps(TensorOps):
         # BEGIN ASSIGN1_2
         # TODO
         # 1. Call the Matmul function implemented in CUDA
+        lib.MatrixMultiply(
+            out._tensor._storage,
+            out._tensor._shape.astype(np.int32),
+            out._tensor._strides.astype(np.int32),
+            a._tensor._storage,
+            a._tensor._shape.astype(np.int32),
+            a._tensor._strides.astype(np.int32),
+            b._tensor._storage,
+            b._tensor._shape.astype(np.int32),
+            b._tensor._strides.astype(np.int32),
+            out.shape[0],
+            out.shape[1],
+            out.shape[2]
+        )
 
         # raise NotImplementedError("Matrix Multiply Function Not Implemented Yet")
         # END ASSIGN1_2
