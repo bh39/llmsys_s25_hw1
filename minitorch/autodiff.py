@@ -146,8 +146,6 @@ def backpropagate(variable: Variable, deriv: Any) -> None:
                 derivatives[parent.unique_id] = grad
             if parent.is_leaf():
                 parent.accumulate_derivative(grad)
-                
-    raise NotImplementedError("Task Autodiff Not Implemented Yet")
     # END ASSIGN1_1
 
 
