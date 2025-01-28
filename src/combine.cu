@@ -393,8 +393,23 @@ __global__ void reduceKernel(
   // 3. Initialize the reduce_value to the output element
   // 4. Iterate over the reduce_dim dimension of the input array to compute the reduced value
   // 5. Write the reduced value to out memory
+  int out_pos = blockIdx.x * blockDim.x + threadIdx.x;
 
-  assert(false && "Not Implemented");
+  if (out_pos < out_size)
+  {
+    to_index(out_pos, out_shape, out_index, shape_size);
+
+    // reduce all elements in the reduce_dim
+    for (int i = 0; i < a_shape[reduce_dim]; i++)
+    {
+      out_index[reduce_dim] = i;
+      int in_pos = index_to_position(out_index, a_strides, shape_size);
+      reduce_value = fn(fn_id, reduce_value, a_storage[in_pos]);
+    }
+    out[out_pos] = reduce_value;
+  }
+
+  // assert(false && "Not Implemented");
   /// END ASSIGN1_2
 }
 
