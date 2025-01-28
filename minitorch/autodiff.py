@@ -136,7 +136,17 @@ def backpropagate(variable: Variable, deriv: Any) -> None:
     """
     # BEGIN ASSIGN1_1
     # TODO
-   
+    derivatives = {variable.unique_id: deriv}
+
+    for var in topological_sort(variable):
+        for parent, grad in var.chain_rule(derivatives[var.unique_id]):
+            if parent.unique_id in derivatives:
+                derivatives[parent.unique_id] += grad
+            else:
+                derivatives[parent.unique_id] = grad
+            if parent.is_leaf():
+                parent.accumulate_derivative(grad)
+                
     raise NotImplementedError("Task Autodiff Not Implemented Yet")
     # END ASSIGN1_1
 

@@ -334,12 +334,9 @@ __global__ void mapKernel(
   {
     to_index(out_pos, out_shape, out_index, shape_size);
     broadcast_index(out_index, out_shape, in_shape, in_index, shape_size, shape_size);
-
-    out_pos = index_to_position(out_index, out_strides, shape_size);
+    int out_pos = index_to_position(out_index, out_strides, shape_size);
     int in_pos = index_to_position(in_index, in_strides, shape_size);
     out[out_pos] = fn(fn_id, in_storage[in_pos]);
-    printf("in %d %d, out %d\n",
-           in_pos, in_storage[in_pos], out_pos, out[out_pos]);
   }
 
   /// END ASSIGN1_2
