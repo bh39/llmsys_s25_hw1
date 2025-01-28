@@ -139,13 +139,18 @@ def backpropagate(variable: Variable, deriv: Any) -> None:
     derivatives = {variable.unique_id: deriv}
 
     for var in topological_sort(variable):
+        # do not call chain_rule on leaf nodes
+        if var.is_leaf():
+          continue
+        
+        # apply chain rule and accumulate derivative if parent is leaf
         for parent, grad in var.chain_rule(derivatives[var.unique_id]):
-            if parent.unique_id in derivatives:
-                derivatives[parent.unique_id] += grad
-            else:
-                derivatives[parent.unique_id] = grad
+            derivatives[parent.unique_id] = derivatives.get(parent.unique_id, 0) + grad
             if parent.is_leaf():
-                parent.accumulate_derivative(grad)
+              parent.accumulate_derivative(grad)
+
+    if variable.is_leaf():
+      variable.accumulate_derivative(deriv)
     # END ASSIGN1_1
 
 
