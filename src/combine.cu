@@ -475,7 +475,22 @@ __global__ void zipKernel(
   // 7.Calculate the position of element in b_array according to b_index and b_strides
   // 8. Apply the binary function to the input elements in a_array & b_array and write the output to the out memory
 
-  assert(false && "Not Implemented");
+  int idx = blockIdx.x * blockDim.x + threadIdx.x;
+  if (idx < out_size)
+  {
+    to_index(idx, out_shape, out_index, out_shape_size);
+    // get a_index and convert to position in a_array
+    broadcast_index(out_index, out_shape, a_shape, a_index, out_shape_size, a_shape_size);
+    int a_pos = index_to_position(a_index, a_strides, a_shape_size);
+    // get b_index and convert to position in a_array
+    broadcast_index(out_index, out_shape, b_shape, b_index, out_shape_size, b_shape_size);
+    int b_pos = index_to_position(b_index, b_strides, b_shape_size);
+
+    int out_pos = index_to_position(out_index, out_strides, out_shape_size);
+    // apply the fn to elements of a and b and write result to out
+    out[out_pos] = fn(fn_id, a_storage[a_pos], b_storage[b_pos]);
+  }
+  // assert(false && "Not Implemented");
   /// END ASSIGN1_2
 }
 
