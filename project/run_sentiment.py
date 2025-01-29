@@ -89,8 +89,6 @@ class Network(minitorch.Module):
         # 1. Construct two linear layers: the first one is embedding_dim * hidden_dim, the second one is hidden_dim * 1
         self.linear1 = Linear(self.embedding_dim, hidden_dim)
         self.linear2 = Linear(hidden_dim, 1)
-
-        raise NotImplementedError
         # END ASSIGN1_3
         
         
