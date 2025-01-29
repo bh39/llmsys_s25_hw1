@@ -209,7 +209,7 @@ class SentenceSentimentTrain:
                 x = minitorch.tensor(X_train[example_num : example_num + batch_size], BACKEND, True)
                 y = minitorch.tensor(y_train[example_num : example_num + batch_size], BACKEND, True)
                 out = model(x)
-                loss = -(y * out.log() + (1 - y) * (1 - out).log()).mean()
+                loss = -(y * out.log() + (-y + 1) * (-out + 1).log()).mean()
                 loss.backward()
                 optim.step()
 
