@@ -52,8 +52,7 @@ class Linear(minitorch.Module):
         # 4. Add self.bias
         # HINT: You can use the view function of minitorch.tensor for reshape
         x = x.view(batch, in_size)
-        self.weights.value = self.weights.value.view(in_size, self.out_size)
-        output = x @ self.weights.value
+        output = x @ self.weights.value.view(in_size, self.out_size)
         output = output.view(batch, self.out_size)
         return output + self.bias.value
     
@@ -210,7 +209,10 @@ class SentenceSentimentTrain:
                 x = minitorch.tensor(X_train[example_num : example_num + batch_size], BACKEND, True)
                 y = minitorch.tensor(y_train[example_num : example_num + batch_size], BACKEND, True)
                 out = model(x)
+                # cross entropy loss
                 loss = -(y * out.log() + (-y + 1) * (-out + 1).log()).mean()
+                # clear out grad
+                optim.zero_grad()
                 loss.backward()
                 optim.step()
 
