@@ -110,7 +110,8 @@ class Network(minitorch.Module):
         batch, _, embedding_dim = embeddings.shape
         avg_embeddings = embeddings.mean(1).view(batch, embedding_dim)
         output = self.linear1(avg_embeddings)
-        output = minitorch.dropout(output.relu(), self.dropout_prob)
+        # ignore when not in training
+        output = minitorch.dropout(output.relu(), self.dropout_prob, not self.training)
         output = self.linear2(output)
         output = output.sigmoid().view(batch)
         return output
