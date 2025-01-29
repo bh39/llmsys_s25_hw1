@@ -52,10 +52,10 @@ class Linear(minitorch.Module):
         # 4. Add self.bias
         # HINT: You can use the view function of minitorch.tensor for reshape
         x = x.view(batch, in_size)
-        self.weights = self.weights.view(in_size, self.out_size)
-        output = self.weights @ x
+        self.weights.value = self.weights.value.view(in_size, self.out_size)
+        output = x @ self.weights.value
         output = output.view(batch, self.out_size)
-        return output + self.bias
+        return output + self.bias.value
     
         # END ASSIGN1_3
         
@@ -87,6 +87,8 @@ class Network(minitorch.Module):
         # BEGIN ASSIGN1_3
         # TODO
         # 1. Construct two linear layers: the first one is embedding_dim * hidden_dim, the second one is hidden_dim * 1
+        self.linear1 = Linear(self.embedding_dim, hidden_dim)
+        self.linear2 = Linear(hidden_dim, 1)
 
         raise NotImplementedError
         # END ASSIGN1_3
@@ -106,8 +108,14 @@ class Network(minitorch.Module):
         # 4. Apply the second linear layer
         # 5. Apply sigmoid and reshape to (batch)
         # HINT: You can use minitorch.dropout for dropout, and minitorch.tensor.relu for ReLU
-        
-        raise NotImplementedError
+
+        batch, _, embedding_dim = embeddings.shape
+        avg_embeddings = embeddings.mean(1).view(batch, embedding_dim)
+        output = self.linear1(avg_embeddings)
+        output = minitorch.dropout(output.relu(), self.dropout_prob)
+        output = self.linear2(output)
+        output = output.sigmoid().view(batch)
+        return output
     
         # END ASSIGN1_3
 
