@@ -282,9 +282,9 @@ __global__ void MatrixMultiplyKernel(
 
   int out_pos = index_to_position((int[]){batch, row, col}, out_strides, 3);
 
-  int M = ashape[1];
-  int N = ashape[2];
-  int P = bshape[2];
+  int M = a_shape[1];
+  int N = a_shape[2];
+  int P = b_shape[2];
 
   float accum = 0.0;
 
