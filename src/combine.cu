@@ -277,8 +277,8 @@ __global__ void MatrixMultiplyKernel(
   // 6. Synchronize to make sure all threads are done computing the output tile for (row, col)
   // 7. Write the output to global memory
 
-  int row = blockIdx.x * TILE + threadIdx.x;
-  int col = blockIdx.y * TILE + threadIdx.y;
+  int row = blockIdx.x * blockDim.x + threadIdx.x;
+  int col = blockIdx.y * blockDim.y + threadIdx.y;
 
   int out_pos = index_to_position((int[]){batch, row, col}, out_strides, 3);
 
